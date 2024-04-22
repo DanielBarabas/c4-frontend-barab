@@ -35,5 +35,3 @@ criteria_list = [
 ]
 st.write("Recommended Show:", query.query_series(criteria_list=criteria_list))
 
-
-# Randomly select one series from the intersected series titles
