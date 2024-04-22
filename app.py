@@ -4,7 +4,7 @@ import pandas as pd
 import random
 
 # Load the data from the CSV file
-data = pd.read_csv("parental-guides.csv")
+data = pd.read_csv("data/parental-guides.csv")
 
 st.title('Content Rating')
 
@@ -18,6 +18,9 @@ criteria_1_severity = st.selectbox('Select Severity 1:', severity_options)
 
 criteria_2_category = st.selectbox('Select Category 2:', category_options)
 criteria_2_severity = st.selectbox('Select Severity 2:', severity_options)
+
+
+# This part will be done by the back-end:
 
 # Filter the data based on user selections for both criteria
 filtered_data_1 = data[(data['cat'] == criteria_1_category) & (data['level'] == criteria_1_severity)]
