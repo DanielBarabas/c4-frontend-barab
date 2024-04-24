@@ -1,1 +1,8 @@
 /data
+/backend/database.ini
+/backend/suppliers_example
+/database.ini
+/upload_csvs_to_postgresql_server.ipynb
+/dash_notebook.ipynb
+/__pycache__
+/backend
