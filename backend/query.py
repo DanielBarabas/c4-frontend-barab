@@ -4,7 +4,7 @@ import pandas as pd
 import psycopg2.extras
 import random
 
-config = load_config(filename="database.ini")
+config = load_config(filename="backend/database.ini")
 
 
 def query_series(criteria_list=["Sex & Nudity", "Severe", "Profanity", "Moderate"]):
@@ -32,16 +32,15 @@ def query_series(criteria_list=["Sex & Nudity", "Severe", "Profanity", "Moderate
         return random.choice(rows)[1]
     else:
         return "There are no series that satisfy your needs. Try pornhub instead"
-
-
+    
 def query_plot(criteria_list=["Sex & Nudity", "Severe"]):
     sql = """ 
-    select s.title, pg.rate
-    from series s 
+    select s.t, s.title, s.rate
+    from series s
     join parentalguides pg on s.t = pg.t
     where cat = '{}' and level = '{}'
-    order by pg.rate DESC
-    LIMIT 5
+    group by s.title, s.rate
+    having count(distinct cat) = 2
     """.format(
         *criteria_list
     )
@@ -53,6 +52,6 @@ def query_plot(criteria_list=["Sex & Nudity", "Severe"]):
     conn.commit()
     conn.close()
     if len(rows) > 0:
-        return rows
+        return random.choice(rows)[1]
     else:
         return "There are no series that satisfy your needs. Try pornhub instead"
