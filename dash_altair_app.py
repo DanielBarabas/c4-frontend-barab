@@ -4,13 +4,9 @@ from dash import dcc, html
 import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output
-import plotly.express as px
-from dash.exceptions import PreventUpdate
-from plotly.graph_objects import Figure, Bar
-from dash import callback
-import dash_bootstrap_components as dbc
 import altair as alt
 import query
+from config import load_config_iam
 
 
 category_options = [
@@ -29,7 +25,7 @@ app.layout = html.Div(
     [
         html.H1("Top 5 highest consensus rate on parental reviews"),
         dcc.Dropdown(
-            id="cat-dropdown",
+            id="cat-dropdown1",
             options=[
                 {"label": category, "value": category} for category in category_options
             ],
@@ -37,7 +33,23 @@ app.layout = html.Div(
             clearable=False,
         ),
         dcc.Dropdown(
-            id="level-dropdown",
+            id="level-dropdown1",
+            options=[
+                {"label": severity, "value": severity} for severity in severity_options
+            ],
+            value="Severe",
+            clearable=False,
+        ),
+        dcc.Dropdown(
+            id="cat-dropdown2",
+            options=[
+                {"label": category, "value": category} for category in category_options
+            ],
+            value="Profanity",
+            clearable=False,
+        ),
+        dcc.Dropdown(
+            id="level-dropdown2",
             options=[
                 {"label": severity, "value": severity} for severity in severity_options
             ],
@@ -51,26 +63,33 @@ app.layout = html.Div(
 
 @app.callback(
     Output("altair-chart", "children"),
-    [Input("cat-dropdown", "value"), Input("level-dropdown", "value")],
+    [
+        Input("cat-dropdown1", "value"),
+        Input("level-dropdown1", "value"),
+        Input("cat-dropdown2", "value"),
+        Input("level-dropdown2", "value"),
+    ],
 )
-def update_graph(selected_cat, selected_level):
-    query_result = query.query_plot([selected_cat, selected_level])
+def update_graph(selected_cat1, selected_level1, selected_cat2, selected_level2):
+    df_to_plot = query.query_plot_two_criteria(
+        [selected_cat1, selected_level1, selected_cat2, selected_level2]
+    )
 
-    if type(query_result) == str:
-        return html.Div(query_result)
-
-    df_to_plot = pd.DataFrame(query_result)
-    df_to_plot.columns = ["title", "rate"]
-
+    if type(df_to_plot) == str:
+        return html.Div(df_to_plot)
+    df_to_plot.to_csv("data/trial.csv")
     chart = (
         alt.Chart(df_to_plot)
         .mark_bar()
-        .encode(x=alt.X("title", sort="ascending"), y="rate", tooltip=["title", "rate"])
-        .properties(
-            width="container",
-            height=400,
-            title=f"Rates for {selected_cat} - {selected_level}",
+        .encode(
+            x=alt.X("category", axis=None), y="rate", color="category", column="series"
         )
+        .properties(
+            width=200,
+            height=300,
+            title=f"Rates for {selected_level1} {selected_cat1} and {selected_level2}{selected_cat2}",
+        )
+        .configure_title(fontSize=20, anchor="middle")
         .interactive()
     )
 
