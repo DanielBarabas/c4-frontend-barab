@@ -1,6 +1,4 @@
-streamlit
 pandas
-random
 psycopg2
 dash
 altair
