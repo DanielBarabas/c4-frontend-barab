@@ -2,7 +2,7 @@ from configparser import ConfigParser
 import boto3
 
 
-def load_config(filename="database.ini", section="aws-iam"):
+def load_config(filename="database_shareable.ini", section="aws-iam"):
     parser = ConfigParser()
     parser.read(filename)
 
@@ -20,8 +20,8 @@ def load_config(filename="database.ini", section="aws-iam"):
     return config
 
 
-def load_config_iam(filename="database.ini", section="aws-database-1"):
-    preconfig_user = load_config(filename="database.ini", section="aws-iam")
+def load_config_iam(filename="database_shareable.ini", section="aws-database-1"):
+    preconfig_user = load_config(filename="database_shareable.ini", section="aws-iam")
     # This is dirty but these are not secrets. I had to put these here because the parser changes to lowercase for some reason.
     preconfig_token = {
         "DBHostname": "database-1.c3eweo0wsv9b.eu-north-1.rds.amazonaws.com",

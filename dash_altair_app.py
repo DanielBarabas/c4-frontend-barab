@@ -7,6 +7,7 @@ from dash.dependencies import Input, Output
 import altair as alt
 import query
 from config import load_config_iam
+import os
 
 
 category_options = [
@@ -107,4 +108,6 @@ def update_graph(selected_cat1, selected_level1, selected_cat2, selected_level2)
 
 
 if __name__ == "__main__":
-    app.run_server(debug=True)
+    # Use the PORT environment variable if available, otherwise default to 8080
+    port = int(os.environ.get("PORT", 8080))
+    app.run_server(host="0.0.0.0", port=port)
