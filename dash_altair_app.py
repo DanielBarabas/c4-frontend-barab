@@ -77,7 +77,6 @@ def update_graph(selected_cat1, selected_level1, selected_cat2, selected_level2)
 
     if type(df_to_plot) == str:
         return html.Div(df_to_plot)
-    df_to_plot.to_csv("data/trial.csv")
     chart = (
         alt.Chart(df_to_plot)
         .mark_bar()
