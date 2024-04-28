@@ -78,7 +78,6 @@ def update_graph(selected_cat1, selected_level1, selected_cat2, selected_level2)
 
     if type(df_to_plot) == str:
         return html.Div(df_to_plot)
-    df_to_plot.to_csv("data/trial.csv")
     chart = (
         alt.Chart(df_to_plot)
         .mark_bar()
@@ -88,7 +87,7 @@ def update_graph(selected_cat1, selected_level1, selected_cat2, selected_level2)
         .properties(
             width=200,
             height=300,
-            title=f"Rates for {selected_level1} {selected_cat1} and {selected_level2}{selected_cat2}",
+            title=f"Rates for {selected_level1} {selected_cat1} and {selected_level2} {selected_cat2}",
         )
         .configure_title(fontSize=20, anchor="middle")
         .interactive()
